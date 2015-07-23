@@ -1,0 +1,11 @@
+{
+  "name": "infiniten",
+  "version": "0.1.1",
+  "description": "A tiny manager for production process running infiniten, such like forever, nodeman or pm2",
+  "author": "@kawanet",
+  "license": "MIT",
+  "bin": {
+    "infiniten": "./bin/infiniten",
+    "initscripten": "./bin/initscripten"
+  }
+}

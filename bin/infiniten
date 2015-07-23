@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# kill child process when killed
+trap "pkill -P $$" EXIT
+
+cnt=1
+
+# start infiniten loop
+while :; do
+  date +"%Y-%m-%d %H:%M:%S #$cnt $*" >&2
+
+  # run command
+  "$@"
+
+  # check exit status code
+  code="$?"
+  exit="EXIT"
+  [ "$code" = 129 ] && exit="SIGHUP"
+  [ "$code" = 130 ] && exit="SIGINT"
+  [ "$code" = 143 ] && exit="SIGTERM"
+
+  date +"%Y-%m-%d %H:%M:%S #$cnt $exit [$code]" >&2
+
+  # wait for seconds until next boot
+  sleep $cnt
+
+  # increment counter
+  cnt=$(($cnt+1))
+done

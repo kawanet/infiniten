@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+
+# variables
+action="$1"
+shift
+run="run"
+user="$(whoami)"
+name="$(basename $0)"
+
+# /tmp/username-servicename.pid for user process servicen
+pidfile="/tmp/$user-$name.pid"
+
+# /var/run/servicename.pid for system process servicen
+[ -w /var/run ] && pidfile="/var/run/$name.pid"
+
+# success function per default
+success() {
+  echo -n "[  OK  ]"
+  echo -ne "\r"
+}
+
+# failure function per default
+failure() {
+  echo -n "[FAILED]"
+  echo -ne "\r"
+}
+
+# functions may override success/failure functions
+func=/etc/rc.d/init.d/functions
+[ -r $func ] && . $func
+
+# die with failure message
+die() {
+  failure
+  exit 1
+}
+
+# die with error message
+bye() {
+  ret=$1
+  shift
+  echo "$*" >&2
+  exit $ret
+}
+
+# start function makes recursive invocation
+_start() {
+  exec -- "$0" "$run" "$@" < /dev/null &
+  pid="$!"
+  [ "$?" -eq 0 ] || return "$?"
+  echo "$pid" > $pidfile
+  return 0
+}
+
+# stop function
+_stop() {
+  pid="$(cat $pidfile 2> /dev/null)"
+  [ "$?" -eq 0 ] || return "$?"
+  ps -p "$pid" 2>&1 > /dev/null || return "$?"
+  kill "$pid" || return "$?"
+  /bin/rm -f "$pidfile" || return "$?"
+  return 0
+}
+
+status() {
+  [ -r "$pidfile" ] || bye 3 "$name is stopped"
+  pid="$(cat $pidfile 2> /dev/null)"
+  [ "$pid" = "" ] && bye 1 "$pidfile invalid"
+  ps -p "$pid" 2>&1 > /dev/null || bye 1 "$name dead but pid file exists"
+  bye 0 "$name (pid $pid) is running..."
+}
+
+# start process
+start() {
+  [ -r "$pidfile" ] && stop_no_dead
+  echo -n $"Starting $name: "
+  _start "$@" && success || die
+  echo
+  exit 0
+}
+
+# stop process
+stop() {
+  echo -n "Stopping $name: "
+  _stop && success || die
+  echo
+  exit 0
+}
+
+# stop process without dead
+stop_no_dead() {
+  echo -n "Stopping $name: "
+  _stop && success || failure
+  echo
+  sleep 1
+}
+
+restart() {
+  stop_no_dead
+  start "$@"
+  exit 0
+}
+
+onexit() {
+  pkill -P $$
+}
+
+# start or stop
+case "$action" in
+  start|stop|restart|status) $action "$@";;
+  $run) ;;
+  *) bye 1 "Usage: $0 {start|stop|restart}";;
+esac
+
+trap onexit EXIT
+trap "echo HUP" HUP
