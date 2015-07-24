@@ -113,4 +113,4 @@ case "$action" in
 esac
 
 trap onexit EXIT
-trap "echo HUP" HUP
+trap "" SIGHUP

@@ -1,9 +1,13 @@
 {
   "name": "infiniten",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A tiny manager for production process running infiniten, such like forever, nodeman or pm2",
   "author": "@kawanet",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kawanet/infiniten.git"
+  },
   "bin": {
     "infiniten": "./bin/infiniten",
     "initscripten": "./bin/initscripten"
