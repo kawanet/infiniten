@@ -1,15 +1,30 @@
 {
   "name": "infiniten",
-  "version": "0.1.3",
   "description": "A tiny manager for production process running infiniten, such like forever, nodeman or pm2",
+  "version": "0.1.3",
   "author": "@kawanet",
+  "bin": {
+    "infiniten": "./bin/infiniten",
+    "initscripten": "./bin/initscripten"
+  },
+  "bugs": {
+    "url": "https://github.com/kawanet/infiniten/issues"
+  },
+  "homepage": "https://github.com/kawanet/infiniten",
+  "keywords": [
+    "daemon",
+    "forever",
+    "initscript",
+    "nodeman",
+    "pm2",
+    "rc.d",
+    "rc.local",
+    "supervisor",
+    "sysV"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/kawanet/infiniten.git"
-  },
-  "bin": {
-    "infiniten": "./bin/infiniten",
-    "initscripten": "./bin/initscripten"
   }
 }
