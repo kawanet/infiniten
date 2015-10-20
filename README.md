@@ -33,7 +33,7 @@ to create SysV Init script with standalone program running inifiniten.
 
 ```sh
 #!/usr/bin/env bash
-# chkconfig: 35 85 15
+# chkconfig: 35 88 15
 
 USR="username"
 CMD="path/to/command"

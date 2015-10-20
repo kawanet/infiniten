@@ -1,6 +1,6 @@
 {
   "name": "infiniten",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A tiny manager for production process running infiniten, such like forever, nodeman or pm2",
   "author": "@kawanet",
   "license": "MIT",
